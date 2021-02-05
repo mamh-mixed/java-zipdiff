@@ -1,0 +1,93 @@
+<!-- $Header: /cvsroot/zipdiff/zipdiff/build.xml,v 1.3 2004/04/13 03:01:18 sullis Exp $ -->
+<!-- ###################################################### -->
+<!-- This is an Ant build file.                             -->
+<!-- For details, see http://ant.apache.org/                -->
+<!-- ###################################################### -->
+
+<project name="zipdiffProject" default="help" basedir=".">
+	<property file="${user.home}/build.properties" />
+	<property name="src.dir" value="${basedir}/src"/>
+	<property name="java.src.dir" value="${src.dir}/main"/>
+	<property name="test.src.dir" value="${src.dir}/test"/>
+	<property name="lib.dir" value="${basedir}/lib"/>
+	<property name="build.dir" value="${basedir}/build"/>
+	<property name="javadoc.build.dir" value="${build.dir}/doc/api"/>
+	<property name="classes.dir" value="${build.dir}/classes"/>
+	<property name="distrib.name" value="zipdiff-0.1"/>
+	<property name="distrib.jar.filename" value="${distrib.name}.jar"/>
+
+	<target name="help">
+		<echo message="ant -projecthelp will display all targets" />
+	</target>
+	
+	<target name="all" depends="init, build, docs, distrib"/>
+
+	<target name="init">
+		<mkdir dir="${build.dir}" />
+		<mkdir dir="${javadoc.build.dir}" />
+		<mkdir dir="${classes.dir}" />
+	</target>
+
+	<target name="clean">
+		<delete dir="${classes.dir}" />
+		<delete dir="${build.dir}" />
+	</target>
+
+	<target name="javadocs" depends="init" >
+		<javadoc packagenames="zipdiff.*"
+		           sourcepath="${java.src.dir}"
+		           defaultexcludes="yes"
+		           destdir="${javadoc.build.dir}"
+		           author="true"
+		           version="true"
+		           use="true"
+		           windowtitle="zipdiff" />
+	</target>
+	
+	<target name="docs" depends="init, javadocs"/>
+
+	<target name="project.jarfile" depends="init, build">
+		<jar destfile="${build.dir}/${distrib.jar.filename}"
+			compress="true">
+			<fileset dir="${classes.dir}"
+				includes="zipdiff/**/*.class" />
+		</jar>
+	</target>
+
+	<target name="build" depends="init">
+		<javac  deprecation="on"
+			destdir="${classes.dir}"
+			includeAntRuntime="yes"
+			debug="on">
+			<src path="${java.src.dir}" />
+		</javac>
+		
+	</target>
+	
+	<target name="distrib" depends="init, zip-distrib">
+	</target>
+	
+	<target name="zip-distrib" depends="init, project.jarfile">
+		<delete file="${build.dir}/${distrib.name}.zip" />
+		<zip destfile="${build.dir}/${distrib.name}.zip">
+			<zipfileset dir="${build.dir}" prefix="${distrib.name}/build">
+				<include name="*.jar" />
+			 </zipfileset>
+			 <zipfileset dir="${src.dir}" prefix="${distrib.name}/src">
+				<include name="**/*.java" />
+				<include name="**/*.html" />
+				<include name="**/*.txt" />
+				<include name="**/*.xml" />
+				<include name="**/*.properties" />
+			 </zipfileset>
+			 <zipfileset dir="${basedir}" prefix="${distrib.name}">
+				<include name="build.xml" />
+			 </zipfileset>
+			 <zipfileset dir="${basedir}" prefix="${distrib.name}">
+				<include name="readme.txt" />
+				<include name="LICENSE.txt" />
+			 </zipfileset>
+		</zip>
+	</target>
+	
+</project>
