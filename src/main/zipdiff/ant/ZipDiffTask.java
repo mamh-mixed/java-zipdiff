@@ -26,6 +26,8 @@ public class ZipDiffTask extends Task
 	private String filename1;
 	private String filename2;
 	private String destfile;
+	private boolean ignoreTimestamps = false;
+	private boolean compareCRCValues = true;
 	
 	public void setFilename1(String name)
 	{
@@ -35,6 +37,26 @@ public class ZipDiffTask extends Task
 	public void setFilename2(String name)
 	{
 		filename2 = name;
+	}
+	
+	public void setIgnoreTimestamps(boolean b)
+	{
+		ignoreTimestamps = b;
+	}
+	
+	public boolean getIgnoreTimestamps()
+	{
+		return ignoreTimestamps;
+	}
+	
+	public void setCompareCRCValues(boolean b)
+	{
+		compareCRCValues = b;
+	}
+	
+	public boolean getCompareCRCValues()
+	{
+		return compareCRCValues;
 	}
 	
 	public void execute() throws BuildException
@@ -124,6 +146,11 @@ public class ZipDiffTask extends Task
 		try
 		{
 			calculator = new DifferenceCalculator(filename1, filename2);
+			calculator.setCompareCRCValues(getCompareCRCValues());
+			calculator.setIgnoreTimestamps(getIgnoreTimestamps());
+			
+			// todo : calculator.setFilenamesToIgnore(patterns);
+			
 			d = calculator.getDifferences();
 		}
 		catch (java.io.IOException ex)

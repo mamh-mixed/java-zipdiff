@@ -2,6 +2,7 @@
  * 
  * 
  */
+
 package zipdiff.output;
 
 import java.io.OutputStream;
@@ -9,10 +10,11 @@ import zipdiff.Differences;
 
 /**
  * 
+ * Builder pattern: <a href="http://wiki.cs.uiuc.edu/patternStories/BuilderPattern">
+ *     http://wiki.cs.uiuc.edu/patternStories/BuilderPattern</a>
+ * 
  * @author Sean C. Sullivan
  *
- * 
- * 
  */
 public interface Builder {
 	public void build(OutputStream out, Differences d);
