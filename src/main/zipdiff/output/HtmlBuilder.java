@@ -55,10 +55,12 @@ public class HtmlBuilder extends AbstractBuilder {
         writeRemoved(pw, d.getRemoved().keySet());
         writeChanged(pw, d.getChanged().keySet());
         pw.println("<hr>");
+        pw.println("<p>");
         pw.println("Generated at " + new java.util.Date());
+        pw.println("</p>");
         pw.println("</body>");
 
-        pw.println("</html");
+        pw.println("</html>");
 
         pw.flush();
 

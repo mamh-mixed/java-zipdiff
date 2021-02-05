@@ -10,11 +10,8 @@ import zipdiff.Differences;
 import zipdiff.output.*;
 import org.apache.tools.ant.Task;
 import org.apache.tools.ant.BuildException;
-import java.io.File;
-import java.io.FileOutputStream;
 
 /**
- * 
  * 
  * 
  * @author Sean C. Sullivan
@@ -82,10 +79,6 @@ public class ZipDiffTask extends Task {
     protected void writeDestFile(Differences d) throws java.io.IOException {
         String destfilename = getDestFile();
 
-        File f = new File(destfilename);
-
-        FileOutputStream fos = null;
-
         Builder builder = null;
 
         if (destfilename.endsWith(".html")) {
@@ -96,21 +89,7 @@ public class ZipDiffTask extends Task {
             builder = new TextBuilder();
         }
 
-        boolean bSuccessful = false;
-
-        try {
-            fos = new FileOutputStream(f);
-            builder.build(fos, d);
-            fos.flush();
-            bSuccessful = true;
-        } finally {
-            if (fos != null) {
-                fos.close();
-            }
-            if (!bSuccessful) {
-                f.delete();
-            }
-        }
+        builder.build(destfilename, d);
     }
 
     public String getDestFile() {
